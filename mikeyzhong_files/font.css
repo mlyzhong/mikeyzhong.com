@@ -43,6 +43,15 @@ a:hover {text-decoration:underline;}
 
 @media (max-width: 670px) { /*for pesky smartphones*/
   .header {
+    display:none;
+  }
+  .header-small {
+    display:none;
+  }
+}
+
+@media (min-width: 671px) { /* for everything else */
+  .header {
     text-align: center;
     margin-left: 0em; /* INDENTS */
     font: 13.25px 'courier';
@@ -53,15 +62,6 @@ a:hover {text-decoration:underline;}
     white-space: -o-pre-wrap; /* Opera */
     white-space: pre-wrap; /* CSS3 - Text module (Candidate Recommendation) http://www.w3.org/TR/css3-text/#white-space */
     word-wrap: break-word; /* IE 5.5+ */
-  }
-  .header-small {
-    display:none;
-  }
-}
-
-@media (min-width: 671px) { /* for everything else */
-  .header {
-    display:none;
   }
   .header-small {
     display:none;
