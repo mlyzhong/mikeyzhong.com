@@ -24,7 +24,7 @@ pre {
   margin-left: 1em; /* INDENTS */
   font: 13.25px 'courier';
   width: 670px;
-  position: absolute;
+  position: relative;
   white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */
   white-space: -pre-wrap; /* Opera */
   white-space: -o-pre-wrap; /* Opera */
