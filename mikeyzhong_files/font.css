@@ -47,7 +47,6 @@ a:hover {text-decoration:underline;}
   }
   .header-small {
     text-align: center;
-
     margin-left: 0em; /* INDENTS */
     font: 13.25px 'courier';
     width: 670px;
@@ -60,10 +59,9 @@ a:hover {text-decoration:underline;}
   }
 }
 
-@media screen and (min-width: 670px) { /* for everything else */
+@media screen and (min-width: 671px) { /* for everything else */
   .header {
     text-align: center;
-
     margin-left: 0em; /* INDENTS */
     font: 13.25px 'courier';
     width: 670px;
