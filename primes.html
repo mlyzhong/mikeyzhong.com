@@ -30,13 +30,13 @@
 </head>
 
 
-<body>
-
-<div class="pre">
+<body><div class="pre"><div class="header">
 ----------------------------------------------------------------------------------
 --------------------------------- mikeyzhong.com ---------------------------------
-----------------------------------------------------------------------------------
-
+----------------------------------------------------------------------------------</div><div class="header-small">
+----------------------------------------
+------------ mikeyzhong.com ------------
+----------------------------------------</div>
 15 Oct 2016 -- UPDATE
 <div class="indent">
 Indeed, this derivation is not exact, as documented <a href="http://www.dms.umontreal.ca/~andrew/PDF/cramer.pdf">here</a> by Andrew Granville in 1995. Despite this, you might still find some value in this non-conventional derivation.
@@ -61,30 +61,30 @@ Thus:
   Pr(N) = [1 - (1/p1)] * [1 - (1/p2)] * ... * [1 - (1/pk)]                   [3]
 
           i=k
-        = PROD [1 - (1/p_i)]                                                 [4]
-          i=1
+        = PROD [1 - (1/p_i)]
+          i=1                                                                [4]
 
 where {p1, p2, ..., pk} are the primes from 2 to (N - 1). We do not like products, so we take a log on both sides:
 
               i=k
-  ln(Pr(N)) = SUM [ ln(1 - (1/p_i)) ]                                        [5]
-              i=1
+  ln(Pr(N)) = SUM [ ln(1 - (1/p_i)) ]
+              i=1                                                            [5]
 
 We do not know which numbers between 2 and (N - 1) are prime and which are composite, so instead of summing up the list {p1, p2, ..., pk}, we shall take the sum over integers, from i = 1 to i = (N - 1), and weighing the sum by the probability that each integer is prime:
 
              (N-1)
-  ln(Pr(N)) = SUM [ ln(1 - (1/i)) * Pr(i) ]                                  [6]
-              i=2
+  ln(Pr(N)) = SUM [ ln(1 - (1/i)) * Pr(i) ]
+              i=2                                                            [6]
 
 Two more approximations: we will replace the discrete sum with a continuous integral, (and thus expanding the support of P(N) from just integers to real numbers) and approximate log(1 - (1/x)) ~= -(1/x) for x >> 1.
 
               x=N
-  ln(Pr(N)) = INT [ ln(1 - (1/x)) * Pr(x) * dx ]                             [7]
-              x=2
+  ln(Pr(N)) = INT [ ln(1 - (1/x)) * Pr(x) * dx ]
+              x=2                                                            [7]
 
               x=N
-           ~= INT [ - (1/x) * Pr(x) * dx ]                                   [8]
-              x=2
+           ~= INT [ - (1/x) * Pr(x) * dx ]
+              x=2                                                            [8]
 
 We can take d/dN on both sides to get:
 
@@ -104,8 +104,8 @@ The Prime Number Theorem is a statement about π(x), the number of primes betwee
           t=2
 
            x
-        =  ∫  dt / ln(t)                                                    [11]
-          t=2
+        =  ∫  dt / ln(t)
+          t=2                                                               [11]
 
 Which is exactly the prime number theorem, as documented <a href="https://en.wikipedia.org/wiki/Prime_number_theorem">here</a>.</div>
 
