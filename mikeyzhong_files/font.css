@@ -41,7 +41,7 @@ a:hover {text-decoration:underline;}
 }
 
 
-@media screen and (max-width: 670px) { /*for pesky smartphones*/
+@media (max-width: 670px) { /*for pesky smartphones*/
   .header {
     display: none;
   }
@@ -59,7 +59,7 @@ a:hover {text-decoration:underline;}
   }
 }
 
-@media screen and (min-width: 671px) { /* for everything else */
+@media (min-width: 671px) { /* for everything else */
   .header {
     text-align: center;
     margin-left: 0em; /* INDENTS */
