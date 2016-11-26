@@ -9,7 +9,7 @@ a:link {color:#0079c8; text-decoration:none;}
 a:visited {color:#0079c8; text-decoration:none;}
 a:hover {text-decoration:underline;}
 
-pre {
+.pre {
   font: 13.25px 'courier';
   width: 670px;
   position: absolute;
