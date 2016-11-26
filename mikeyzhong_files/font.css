@@ -46,6 +46,8 @@ a:hover {text-decoration:underline;}
     display: none;
   }
   .header-small {
+
+    display:none;
     text-align: center;
     margin-left: 0em; /* INDENTS */
     font: 13.25px 'courier';
@@ -61,6 +63,7 @@ a:hover {text-decoration:underline;}
 
 @media (min-width: 671px) { /* for everything else */
   .header {
+    display:none;
     text-align: center;
     margin-left: 0em; /* INDENTS */
     font: 13.25px 'courier';
