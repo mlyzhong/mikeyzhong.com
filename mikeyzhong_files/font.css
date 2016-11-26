@@ -10,9 +10,10 @@ a:visited {color:#0079c8; text-decoration:none;}
 a:hover {text-decoration:underline;}
 
 .pre {
+  margin-left: 0em; /* INDENTS */
   font: 13.25px 'courier';
   width: 670px;
-  position: absolute;
+  position: relative;
   white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */
   white-space: -pre-wrap; /* Opera */
   white-space: -o-pre-wrap; /* Opera */
