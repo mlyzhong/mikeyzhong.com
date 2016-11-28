@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <!--<base target="_blank">--><base href="." target="_blank">
+  <meta name="description" content="The Official Page of Mike Zhong.">
+  <link rel="shortcut icon" href="favicon.ico" />
+  <title>Prime Number Theorem: A Probabilistic Derivation </title>
+
+  <meta property="og:title" content="Mike Zhong">
+  <meta property="og:site_name" content="mikeyzhong.com">
+  <meta property="og:description" content="This is Mike Zhong's personal website. Go Bears!">
+  <link rel="stylesheet" href="./mikeyzhong_files/font.css" type="text/css">
+  <meta name="viewport" content="width=device-width"/>
+  <meta name="format-detection" content="telephone=no"> <!-- no weird telephone number formatting -->
+
+  <style type="text/css">
+  </style>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-88025094-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+</head>
+
+<!-- FURTHER IDEAS
+1) because polynomial ... polynomial interpolation. at most, k = N ..? to get exact expression?
+2) bound ... if min(T(n+1) - T(n)) ~= 1 ms, and max(T(n+1)  - T(n)) ~= 1s, what can we say about ..?
+3) a LAG between two spike trains is SIMPLY (I think???) the difference in a_0 coefficients ..?
+-->
+<body><div class="header">
++------------------+
+|  mikeyzhong.com  |
++------------------+</div><div class="pre">
+
+28 Nov 2016 -- Spike trains!
+<div class="indent">
+In neuroscience, a measured spike train is often represented as a train of Dirac Delta Functions:
+
+    ^        ^       ^     ^   ^        ^
+    |        |       |     |   |        |
+  --+--------+-------+-----+---+--------+-------->
+                                        time t
+     <-- 10ms -->   (unreal data)
+
+or mathematically, as:
+
+  f : Real Numbers  -->  {0, 1}
+         f(t)      |-->  Spike at time t?
+
+The most popular analysis techniques that I know of at the moment involve (1) looking at time-averaged pike rates (e.g. at t = 0s, this neuron is firing around 10Hz, but after the stimulus is turned on at t = 10s, the firing rate increases to around 20Hz.), or (2) considering spike-triggered stimuli (e.g. every time a spike occurs at time t_i, we will look at the stimulus t_i +/- 10 seconds -- can we draw any conclusions about the receptive field of the neuron?).
+
+I am working on a better representation for spike trains. When you have your spike train, you can describe it with the aforementioned function f. Or, you can consider that the first spike occurs at time t_1, the second at time t_2, the third at time t_3, etc. In other words, instead of having a function f to describe it, a spike train can just as well be described as:
+
+  T : Positive Integers  -->  Real Numbers
+          F(n)          |-->  Time of nth spike
+
+T is a monotonically increasing, integer valued function -- rather, a sequence: {t_1, t_2, t_3, ...}! It tells you when the nth spike occurs!
+
+Would there be a way of decomposing T(n) into a basis, g_k(n), i.e.:
+
+         inf
+  T(n) = SUM  a_k * g_k(n)
+         k=0
+
+For dimensional analysis, the coefficients a_k's are in units of time, seconds, what not.
+
+This is very reminiscent of a Discrete Fourier Transform. I propose, that instead of using a {sin(kx), cos(kx)} Fourier basis, however, that we use an orthogonal polynomial basis, e.g. the Legendre polynomials. Very quickly, the Legendre polynomials defined on the interval: x in [-1, 1], and are given by:
+
+  P_0(x) = 1
+  P_1(x) = x
+  P_2(x) = (3x^2 - 1) / 2
+  P_3(x) = (5x^3 - 3x) / 2
+
+the general formula is given in wikipedia <a href="https://en.wikipedia.org/wiki/Legendre_polynomials">here</a>.
+
+These polynomials are orthogonal, in that the inner product (given by the interval):
+
+                                    +-
+   +1                               | 2/(2k+1), if j = k
+   INT  P_{j} (x) * P_{k} (x) dx =  |
+   -1                               | 0, if j != k
+                                    +-
+
+We also have that P_{k}(x = -1) = +/- 1, plus if k is even, minus if k is odd, and P_{k}(x = +1) = +1 for all k.
+
+An image is <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Legendrepolynomials6.svg/1280px-Legendrepolynomials6.svg.png"> here </a>.
+
+Now, we shall consider that from t = 0 to t = P_final, N spikes occur at times {t_1, t_2, ... , t_N}. Proposal: write T(n) as:
+
+         inf
+  T(n) = SUM  a_k * P_{k}(x = -1 + (2n - 1) / N)
+         k=0
+
+The choice of passing (x = -1 + (2n - 1) / N) into the argument of P_{k}, so that the n's are evenly spaced from -1, to 1, and: for n = 1 - 0.5, we have x = -1; and for n = N + 0.5, x = +1.
+
+Simple algebra allows us to invert x(n) to get n(x):
+
+      x(n) = -1 + (2n - 1) / N
+
+  =>  n(x) = (1 + N(x + 1)) / 2
+
+so that n(x = -1) = 1 - 0.5, and n(x = +1) = N.
+
+The great thing about the P_{k} Legendre basis being orthogonal is that to get the coefficients a_k of F, you can integrate:
+
+                  +1
+  a_k = (2k+1)/2  INT  T(n(x)) * P_{k} (x) dx
+                  -1
+
+Of course, T(n(x)) is only defined on the integers. You can use a change of basis and discrete approximation (rectangle rule!) to get:
+
+                   N
+  a_k = (2k+1)/2  SUM  T(n) * P_{k}(x(n)) * (2/N)
+                  n=1
+
+Whereby (2/N) = dx/dn . Plugging in the first couple Legendre polynomials:
+
+               N
+  a_0 = (1/2) SUM  T(n) * (2/N)
+              n=1
+
+          1   N
+      =  --- SUM T(n) =	&lt;T(n)&gt;
+          N  n=1
+
+in other words, a_0 is the mean spike time for your spike train. It's not that useful -- let me continue to the real juice of the matter:
+
+               N
+  a_1 = (3/2) SUM  T(n) * (-1 + (2n - 1) / N) [2/N]
+              n=1
+
+
+      = (3/2) SUM
+
+Some things to consider, with this mathematical representation:
+<div style="margin-left: 2em;">
+(1) Does there exist a good metric for this representation? For example, if you have two nearly-identical spike trains A and B (perhaps B has an extra spike stuck into it) would the distance between the two spikes, with this metric, be very close?
+
+(2) will this be useful, comparing the spike trains of an ensemble of neurons? I am working this out.
+
+(3) will this be useful, comparing a spike train with a stimulus -- a time series? I am also working this out.
+
+</div></div></div>
+</body></html>
