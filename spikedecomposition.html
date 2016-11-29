@@ -35,10 +35,10 @@
 2) bound ... if min(T(n+1) - T(n)) ~= 1 ms, and max(T(n+1)  - T(n)) ~= 1s, what can we say about ..?
 3) a LAG between two spike trains is SIMPLY (I think???) the difference in a_0 coefficients ..?
 -->
-<body><div class="header">
+<body><div class="pre"><div style="text-align: center; margin-left: 0em; /* INDENTS */">
 +------------------+
 |  mikeyzhong.com  |
-+------------------+</div><div class="pre">
++------------------+</div>
 
 28 Nov 2016 -- Spike trains!
 <div class="indent">
@@ -46,7 +46,7 @@ In neuroscience, a measured spike train is often represented as a train of Dirac
 
     ^        ^       ^     ^   ^        ^
     |        |       |     |   |        |
-  --+--------+-------+-----+---+--------+-------->
+  --+--------+-------+-----+---+--------+------>
                                         time t
      <-- 10ms -->   (unreal data)
 
@@ -83,11 +83,12 @@ the general formula is given in wikipedia <a href="https://en.wikipedia.org/wiki
 
 These polynomials are orthogonal, in that the inner product (given by the interval):
 
-                                    +-
-   +1                               | 2/(2k+1), if j = k
-   INT  P_{j} (x) * P_{k} (x) dx =  |
-   -1                               | 0, if j != k
-                                    +-
+                                 +---
+   +1                            | 2/(2k+1)
+   INT  P_{j}(x) * P_{k}(x) dx = | if j = k
+   -1                            |
+   -1                            | 0, else
+                                 +---
 
 We also have that P_{k}(x = -1) = +/- 1, plus if k is even, minus if k is odd, and P_{k}(x = +1) = +1 for all k.
 
@@ -96,10 +97,10 @@ An image is <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/L
 Now, we shall consider that from t = 0 to t = P_final, N spikes occur at times {t_1, t_2, ... , t_N}. Proposal: write T(n) as:
 
          inf
-  T(n) = SUM  a_k * P_{k}(x = -1 + (2n - 1) / N)
+  T(n) = SUM  a_k * P_{k}(x = -1 + (2n - 1)/N)
          k=0
 
-The choice of passing (x = -1 + (2n - 1) / N) into the argument of P_{k}, so that the n's are evenly spaced from -1, to 1, and: for n = 1 - 0.5, we have x = -1; and for n = N + 0.5, x = +1.
+The choice of passing (x = -1 + (2n - 1)/N) into the argument of P_{k}, so that the n's are evenly spaced from -1, to 1, and: for n = 1 - 0.5, we have x = -1; and for n = N + 0.5, x = +1.
 
 Simple algebra allows us to invert x(n) to get n(x):
 
@@ -112,7 +113,7 @@ so that n(x = -1) = 1 - 0.5, and n(x = +1) = N.
 The great thing about the P_{k} Legendre basis being orthogonal is that to get the coefficients a_k of F, you can integrate:
 
                   +1
-  a_k = (2k+1)/2  INT  T(n(x)) * P_{k} (x) dx
+  a_k = (2k+1)/2  INT  T(n(x)) * P_{k}(x) dx
                   -1
 
 Of course, T(n(x)) is only defined on the integers. You can use a change of basis and discrete approximation (rectangle rule!) to get:
@@ -134,7 +135,7 @@ Whereby (2/N) = dx/dn . Plugging in the first couple Legendre polynomials:
 in other words, a_0 is the mean spike time for your spike train. It's not that useful -- let me continue to the real juice of the matter:
 
                N
-  a_1 = (3/2) SUM  T(n) * (-1 + (2n - 1) / N) [2/N]
+  a_1 = (3/2) SUM  T(n) * (-1 + (2n - 1)/N)(2/N)
               n=1
 
 
