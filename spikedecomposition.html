@@ -76,7 +76,7 @@ Some things to consider, with this mathematical representation:
 
   g(r) ~= (g_1/r) + (g_2/r^2) + (g3/r^3) + ...
 
-in which the g_1 coefficient is the main 1/r interactions, but g_k for k > 2 represent the non-spherical correction terms [1]. Likewise, if g_0(n) = 1 (a constant), and g_1(n) = n; then a_0 would represent the mean spike time, and a_1 (hopefully) would represent the average spike interval, so that the first approximation:
+in which the g_1 coefficient is the main 1/r interactions, but g_k for k > 2 represent the non-spherical correction terms [1]. Likewise, if g_0(n) = 1 (a constant), and g_1(n) = n; then a_0 would represent the mean spike time, and a_1 (hopefully) would represent the average spike interval -- the inverse time-averaged spike rate! -- so that the first approximation:
 
   T_1(n) = a_0 * g_0(n) + a_1 * g_1(n)
          = a_0 + a_1 * n
