@@ -39,31 +39,30 @@
 +------------------+
 |  mikeyzhong.com  |
 +------------------+</div>
-28 Nov 2016 -- Spike trains!
+30 Nov 2016 -- ORTHOGONAL DECOMPOSITION OF SPIKE TRAINS
 <div class="indent">
 In neuroscience, a measured spike train is often represented as a train of Dirac Delta Functions:
 
-    ^        ^       ^     ^   ^        ^
-    |        |       |     |   |        |
-  --+--------+-------+-----+---+--------+------>
-                                        time t
-     <-- 10ms -->   (unreal data)
+    ^       ^             ^   ^       ^
+    |       |             |   |       |
+  --+-------+-------------+---+-------+---->
+    <- 10ms ->                       time t
 
-or mathematically, as:
+in other words:
 
-  f : Real Numbers  -->  {0, 1}
-         f(t)      |-->  Spike at time t?
+  s : Real Numbers  -->  {0, 1}
+         s(t)      |-->  Spike at time t?
 
-The most popular analysis techniques that I know of at the moment involve (1) looking at time-averaged pike rates (e.g. at t = 0s, this neuron is firing around 10Hz, but after the stimulus is turned on at t = 10s, the firing rate increases to around 20Hz.), or (2) considering spike-triggered stimuli (e.g. every time a spike occurs at time t_i, we will look at the stimulus t_i +/- 10 seconds -- can we draw any conclusions about the receptive field of the neuron?).
+The most popular analysis techniques that I know of at the moment involve (1) looking at trial-averaged/time-averaged spike rates (e.g. at t = 0s, this neuron is firing around 10Hz, but after the stimulus is turned on at t = 10s, the firing rate increases to around 20Hz.), or (2) considering spike-triggered stimuli (e.g. every time a spike occurs at time t_i, we will look at the stimulus t_i +/- 10 seconds -- can we draw any conclusions about the receptive field of the neuron?).
 
-I am working on a better representation for spike trains. When you have your spike train, you can describe it with the aforementioned function f. Or, you can consider that the first spike occurs at time t_1, the second at time t_2, the third at time t_3, etc. In other words, instead of having a function f to describe it, a spike train can just as well be described as:
+I am working on a better representation for spike trains. When you have your spike train, you can describe it with the aforementioned function f. Or, you can consider that the first spike occurs at time t_1, the second at time t_2, the third at time t_3, etc. as a sequence: {t_1, t_2, t_3, ...}. In other words, instead of having the aforementioned function s, a spike train can just as well be described as:
 
   T : Positive Integers  -->  Real Numbers
-          F(n)          |-->  Time of nth spike
+          T(n)          |-->  Time of nth spike
 
-T is a monotonically increasing, integer valued function -- rather, a sequence: {t_1, t_2, t_3, ...}! It tells you when the nth spike occurs!
+T is a monotonically increasing, integer valued function -- rather, a sequence! It tells you when the nth spike occurs!
 
-Would there be a way of decomposing T(n) into a basis, g_k(n), i.e.:
+Would there be a way of decomposing T(n) into a (hopefully orthogonal) basis, g_k(n), i.e.:
 
          inf
   T(n) = SUM  a_k * g_k(n)
@@ -71,6 +70,79 @@ Would there be a way of decomposing T(n) into a basis, g_k(n), i.e.:
 
 For dimensional analysis, the coefficients a_k's are in units of time, seconds, what not.
 
+Some things to consider, with this mathematical representation:
+<div style="margin-left: 1.5em;">
+(1) The original inspiration is from field theory in physics: the gravitational field of Earth is, to an excellent approximation 1/r . However, the closer you get to Earth's surface, you will realize that Earth is not a perfect sphere -- there are mountains and valleys and bodies of water that will have a measurable effect. One can perform a multipole expansion:
+
+  g(r) ~= (g_1/r) + (g_2/r^2) + (g3/r^3) + ...
+
+in which the g_1 coefficient is the main 1/r interactions, but g_k for k > 2 represent the non-spherical correction terms [1]. Likewise, if g_0(n) = 1 (a constant), and g_1(n) = n; then a_0 would represent the mean spike time, and a_1 (hopefully) would represent the average spike interval, so that the first approximation:
+
+  T_1(n) = a_0 * g_0(n) + a_1 * g_1(n)
+         = a_0 + a_1 * n
+
+would look like:
+
+    ^        ^        ^        ^        ^
+    |        |        |        |        |
+  --+--------+--------+--------+--------+-->
+    <- 10ms ->                       time t
+
+an evenly-spaced spike train. This would be an approximation for actual recorded spike trains (reproduced from top):
+
+    ^       ^             ^   ^       ^
+    |       |             |   |       |
+  --+-------+-------------+---+-------+---->
+    <- 10ms ->                       time t
+
+where the rest of the coeffients, a_k, k > 2, give the jitter terms, i.e.:
+
+  J(n) = T(n) - T_1(n)
+       = a_2*g_2(n) + a_3*g_3(n) + ...
+
+From considering the lag of T and T_1,
+
+T:   --+--------+--------+--------+--------+-->
+T_1: --+-------+-------------+---+-------+---->
+       <- 10ms ->                       time t
+
+we have the jitters: {0, -1ms, +4ms, -1ms, -2ms} to be corrected by the a_2, a_3, a_4, ... terms.
+
+(2) for an ensemble of M neurons, indexed by i = 1 to M, we would have M time-series: {T_1, T_2, ..., T_M). Would the decomposition:
+
+           inf
+  T_i(n) = SUM  a_k * f_k(i) * g_k(n)
+           k=0
+
+tell us anything useful? Given {g_k(n)}, how would we interpret f_k(i) -- the spatial terms?
+
+A problem is this is that some neurons have much higher firing rates than others. We might measure only 10 spikes from neuron 1, but 99 from neuron 2. To get around this, we can normalize the windows:
+
+  T_i(x) = T_i(n = N_i * x)
+
+whereby N_i is the total number of spikes observed by neuron i, and x is a fraction from 0 to 1. We would then have:
+
+           inf
+  T_i(x) = SUM  a_k * f_k(i) * g_k(x)
+           k=0
+
+a special case, considering just 2 neurons, T_1 and T_2, with the exact same spike train (miraculously!), except T_2 lags behind by 1ms. We would then have:
+
+               +--
+               | f_0(i = 1) + 1ms for k = 0
+  f_k(i = 2) = |
+               | f_k(i = 1) for k > 0
+               +--
+
+in other words, f_0(i) would represent mean time lags between different neurons' spike trains.
+
+(3) How useful will it be to comparing a spike train with a stimulus input/motor output time series?
+
+(4) Does there exist a good metric for this representation? For example, if you have two nearly-identical spike trains A and B (perhaps B has an extra spike stuck into it) would the distance between the two spikes, with this metric, be very close? This is somewhat related to Parseval's theorem, <a href="https://en.wikipedia.org/wiki/Parseval's_theorem">here</a>.
+
+</div></div>
+An Incomplete Proposition:
+<div class="indent">
 This is very reminiscent of a Discrete Fourier Transform. I propose, that instead of using a {sin(kx), cos(kx)} Fourier basis, however, that we use an orthogonal polynomial basis, e.g. the Legendre polynomials. Very quickly, the Legendre polynomials defined on the interval: x in [-1, 1], and are given by:
 
   P_0(x) = 1
@@ -91,7 +163,8 @@ These polynomials are orthogonal, in that the inner product (given by the interv
 
 We also have that P_{k}(x = -1) = +/- 1, plus if k is even, minus if k is odd, and P_{k}(x = +1) = +1 for all k.
 
-An image is <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Legendrepolynomials6.svg/1280px-Legendrepolynomials6.svg.png"> here </a>.
+Here is an image reproduced from wikipedia:
+<img src="./mikeyzhong_files/legendre-polynomials.png">
 
 Now, we shall consider that from t = 0 to t = P_final, N spikes occur at times {t_1, t_2, ... , t_N}. Proposal: write T(n) as:
 
@@ -131,23 +204,18 @@ Whereby (2/N) = dx/dn . Plugging in the first couple Legendre polynomials:
       =  --- SUM T(n) =	&lt;T(n)&gt;
           N  n=1
 
-in other words, a_0 is the mean spike time for your spike train. It's not that useful -- let me continue to the real juice of the matter:
+in other words, a_0 is the mean spike time for your spike train.
+
+<!--It's not that useful -- let me continue to the real juice of the matter:
 
                N
   a_1 = (3/2) SUM  T(n) * (-1 + (2n - 1)/N)(2/N)
               n=1
+-->
+To be continued ....
 
-to be continued ....
+[1] as an aside, the g_k terms are not constants, but generally depend on the direction of r (projected onto surface of a unit sphere in 3-dimensions)
 
 <!--      = (3/2) SUM-->
-
-Some things to consider, with this mathematical representation:
-<div style="margin-left: 2em;">
-(1) Does there exist a good metric for this representation? For example, if you have two nearly-identical spike trains A and B (perhaps B has an extra spike stuck into it) would the distance between the two spikes, with this metric, be very close?
-
-(2) will this be useful, comparing the spike trains of an ensemble of neurons? I am working this out.
-
-(3) will this be useful, comparing a spike train with a stimulus -- a time series? I am also working this out.
-
-</div></div></div>
+</div></div>
 </body></html>
