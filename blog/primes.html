@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <!--<base target="_blank">--><base href="." target="_blank">
+  <meta name="description" content="The Official Page of Mike Zhong.">
+  <link rel="shortcut icon" href="favicon.ico" />
+  <title>Prime Number Theorem: A Probabilistic Derivation </title>
+
+  <meta property="og:title" content="Mike Zhong">
+  <meta property="og:site_name" content="mikeyzhong.com">
+  <meta property="og:description" content="This is Mike Zhong's personal website. Go Bears!">
+  <link rel="stylesheet" href="../files/font.css" type="text/css">
+  <meta name="viewport" content="width=device-width"/>
+  <meta name="format-detection" content="telephone=no"> <!-- no weird telephone number formatting -->
+
+  <style type="text/css">
+  </style>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-88025094-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</head>
+
+
+<body><div class="pre"><div style="text-align: center; margin-left: 0em; /* INDENTS */">
++------------------+
+|  mikeyzhong.com  |
++------------------+</div>
+15 Oct 2016 -- UPDATE
+<div class="indent">
+Indeed, this derivation is not exact, as documented <a href="http://www.dms.umontreal.ca/~andrew/PDF/cramer.pdf">here</a> by Andrew Granville in 1995. Despite this, you might still find some value in this non-conventional derivation.
+</div>
+
+06 Oct 2016 -- A PROBABILISTIC DERIVATION OF THE PRIME NUMBER THEOREM
+<div class="indent">
+A forewarning: in no way is this derivation mathematically rigorous. If you successfully poke holes in this, please contact me <a href="mailto:mlyzhong@berkeley.edu">here</a>.
+
+Here goes:
+
+We shall denote the probability that a large integer N is prime as Pr(N). N is prime when it is not divisible by 2, 3, 5, ... Assuming independence of being divisible by different prime numbers, we have:
+
+  Pr(N) = Pr(N % 2 != 0) * Pr(N % 3 != 0) * Pr(N % 5 != 0) * ...             [1]
+
+up till the largest prime number below N. Now, every other number is even, every third number is divisible by three, every fifth number by five. So one half of numbers are not divisible by two, two-thirds are not divisible by three, four-fifths are not divisible by five, so on and so forth. In general:
+
+  Pr(N % p != 0) ~= 1 - (1/p)                                                [2]
+
+Thus:
+
+  Pr(N) = [1 - (1/p1)] * [1 - (1/p2)] * ... * [1 - (1/pk)]                   [3]
+
+          i=k
+        = PROD [1 - (1/p_i)]
+          i=1                                                                [4]
+
+where {p1, p2, ..., pk} are the primes from 2 to (N - 1). We do not like products, so we take a log on both sides:
+
+              i=k
+  ln(Pr(N)) = SUM [ ln(1 - (1/p_i)) ]
+              i=1                                                            [5]
+
+We do not know which numbers between 2 and (N - 1) are prime and which are composite, so instead of summing up the list {p1, p2, ..., pk}, we shall take the sum over integers, from i = 1 to i = (N - 1), and weighing the sum by the probability that each integer is prime:
+
+             (N-1)
+  ln(Pr(N)) = SUM [ ln(1 - (1/i)) * Pr(i) ]
+              i=2                                                            [6]
+
+Two more approximations: we will replace the discrete sum with a continuous integral, (and thus expanding the support of P(N) from just integers to real numbers) and approximate log(1 - (1/x)) ~= -(1/x) for x >> 1.
+
+              x=N
+  ln(Pr(N)) = INT [ ln(1 - (1/x)) * Pr(x) * dx ]
+              x=2                                                            [7]
+
+              x=N
+           ~= INT [ - (1/x) * Pr(x) * dx ]
+              x=2                                                            [8]
+
+We can take d/dN on both sides to get:
+
+  (1 / Pr(N)) * (d[Pr(N)]/d[N]) = - (1/N) * Pr(N)                            [9]
+
+  => -d[Pr(N)] / (Pr(N))^2 = d[N]/N
+
+  => 1 / Pr(N) = ln(N)
+
+  => Pr(N) = 1 / ln(N)                                                      [10]
+
+We arrive to the density of primes! In other words, if I were to feed you a very, very large number N, without knowing anything about it, the correct guess of the probability that it is prime is 1 / ln(N).
+
+The Prime Number Theorem is a statement about π(x), the number of primes between 1 and x. We assert that this is the integral of the density of primes:
+           x
+  π(x) ~=  ∫  Pr(t) dt
+          t=2
+
+           x
+        =  ∫  dt / ln(t)
+          t=2                                                               [11]
+
+Which is exactly the prime number theorem, as documented <a href="https://en.wikipedia.org/wiki/Prime_number_theorem">here</a>.</div>
+
+
+</div>
+</body></html>
